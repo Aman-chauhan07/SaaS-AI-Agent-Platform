@@ -1,9 +1,9 @@
-import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export default function Home() {
   return (
-    <Button>
-      click me
-    </Button>
+    <Link href="/sign-in">
+      Sign in
+    </Link>
   );
 }
