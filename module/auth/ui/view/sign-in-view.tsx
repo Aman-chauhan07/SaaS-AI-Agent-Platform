@@ -1,4 +1,6 @@
-"use client";
+"use client"; 
+
+// Components, libraries aur hooks import ho rahe hain
 import { Card, CardContent } from "@/components/ui/card";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -16,13 +18,47 @@ import {
 import { Alert, AlertTitle } from "@/components/ui/alert";
 import { OctagonAlertIcon } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { authClient } from "@/lib/auth-client";
+import { useState } from "react";
 
+// Zod validation schema banaya gaya (email required, password required)
 const formSchema = z.object({
   email: z.string().email(),
   password: z.string().min(1, { message: "Password is required" }),
 });
 
 export const SignInView = () => {
+  const router = useRouter(); // Next.js routing ke liye
+  const [pending, setPending] = useState(false); // Button disable / loading state ke liye
+  const [error, setError] = useState<string | null>(null); // Error message store karne ke liye
+
+  // Form submit hone ke baad chalne wala function
+  const onSubmit = (data: z.infer<typeof formSchema>) => {
+    setError(null);
+    setPending(true);
+
+    // AuthClient ke through sign-in karne ki call
+    authClient.signIn.email(
+      {
+        email: data.email,
+        password: data.password,
+      },
+      {
+        onSuccess: () => {
+          setPending(false);
+          router.push("/"); // Success hone par home page redirect
+        },
+
+        onError: ({ error }) => {
+          setPending(false);
+          setError(error.message); // Error hone par UI me show hoga
+        },
+      }
+    );
+  };
+
+  // React Hook Form setup with Zod validation
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -32,20 +68,30 @@ export const SignInView = () => {
   });
 
   return (
+    // Page layout - full screen center alignment with gradient background
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100 px-4">
       <div className="w-full max-w-4xl">
+        {/* Card wrapper */}
         <Card className="overflow-hidden rounded-2xl shadow-xl border border-gray-200">
           <CardContent className="grid p-0 md:grid-cols-2">
+            {/* Form section */}
             <Form {...form}>
-              <form className="flex flex-col items-center justify-center p-7  text-gray-700">
+              <form
+                onSubmit={form.handleSubmit(onSubmit)} // Form submission
+                className="flex flex-col items-center justify-center p-7 text-gray-700"
+              >
                 <div className="flex flex-col gap-6">
+                  {/* Heading */}
                   <div className="flex flex-col items-center text-center">
-                    <h1 className="md:text-3xl text-lg font-bold">Welcome back</h1>
+                    <h1 className="md:text-3xl text-lg font-bold">
+                      Welcome back
+                    </h1>
                     <p className="text-muted-foreground text-balance">
                       Login to your account
                     </p>
                   </div>
 
+                  {/* Email input */}
                   <div className="grid gap-3">
                     <FormField
                       control={form.control}
@@ -61,12 +107,13 @@ export const SignInView = () => {
                               {...field}
                             />
                           </FormControl>
-                          <FormMessage />
+                          <FormMessage /> {/* Agar validation error hoga to ye show karega */}
                         </FormItem>
                       )}
                     />
                   </div>
 
+                  {/* Password input */}
                   <div className="grid gap-3">
                     <FormField
                       control={form.control}
@@ -81,30 +128,38 @@ export const SignInView = () => {
                               {...field}
                             />
                           </FormControl>
-                          <FormMessage />
+                          <FormMessage /> {/* Validation error message */}
                         </FormItem>
                       )}
                     />
                   </div>
-                  {true && (
+
+                  {/* Error message alert */}
+                  {!!error && (
                     <Alert className="bg-destructive/10 border-none">
                       <OctagonAlertIcon className="w-4 h-4 !text-destrucitive " />
-                      <AlertTitle>Error</AlertTitle>
+                      <AlertTitle>{error}</AlertTitle>
                     </Alert>
                   )}
-                  <Button type="submit" className="w-full">
+
+                  {/* Sign-in button */}
+                  <Button disabled={pending} type="submit" className="w-full">
                     Sign In
                   </Button>
+
+                  {/* Divider line with text */}
                   <div
                     className="relative text-center text-sm 
-            after:absolute after:inset-0 after:top-1/2 
-            after:flex after:items-center after:border-t 
-            after:border-border after:z-0"
+              after:absolute after:inset-0 after:top-1/2 
+              after:flex after:items-center after:border-t 
+              after:border-border after:z-0"
                   >
                     <span className="relative z-10 bg-white px-2 text-gray-500">
                       Or continue with
                     </span>
                   </div>
+
+                  {/* Social login buttons */}
                   <div className="grid grid-cols-2 gap-4 w-full">
                     <Button variant="outline" type="button" className="w-full">
                       Google
@@ -113,9 +168,14 @@ export const SignInView = () => {
                       Github
                     </Button>
                   </div>
+
+                  {/* Sign-up link */}
                   <div className="text-center text-sm">
                     Don&apos;t have an account{" "}
-                    <Link href="/sign-up" className="underline underline-offset-4">
+                    <Link
+                      href="/sign-up"
+                      className="underline underline-offset-4"
+                    >
                       Sign Up
                     </Link>
                   </div>
@@ -123,22 +183,22 @@ export const SignInView = () => {
               </form>
             </Form>
 
-            {/* col 2 */}
+            {/* Right side (branding/logo area) */}
             <div className="bg-gradient-to-br from-orange-400 via-white to-green-400 relative hidden md:flex flex-col items-center justify-center gap-y-5 p-5">
               <img
                 src="/logo.svg"
                 alt="Logo"
-                width={102}
                 className="mt-2 w-[102px] drop-shadow-lg"
               />
               <p className="text-4xl font-bold text-black">AI Agent</p>
             </div>
           </CardContent>
         </Card>
+
+        {/* Terms and conditions text */}
         <div className="text-muted-foreground mt-5 *:[a]:hover:text-primary text-center text-xs text-balance *:[a]:underline *:[a]:underline-offset-4">
-          By clicking contine, you agree to our{" "}
-          <a href="#"> Terms of Service</a>{" "}and{" "}
-          <a href="#">Privacy Policy</a>
+          By clicking contine, you agree to our <a href="#"> Terms of Service</a>{" "}
+          and <a href="#">Privacy Policy</a>
         </div>
       </div>
     </div>
