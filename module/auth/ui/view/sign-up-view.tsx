@@ -1,4 +1,4 @@
-"use client"; 
+"use client";
 
 import { Card, CardContent } from "@/components/ui/card";
 import { z } from "zod";
@@ -22,15 +22,17 @@ import { authClient } from "@/lib/auth-client";
 import { useState } from "react";
 
 // 🔹 Form validation rules (Zod schema)
-const formSchema = z.object({
-  name: z.string().min(1, { message: "Name is required " }),
-  email: z.string().email(),
-  password: z.string().min(1, { message: "Password is required" }),
-  confirmPassword: z.string().min(1, { message: "Password is required" }),
-}).refine((data) => data.password === data.confirmPassword, {
-  message: "Password is not match",
-  path: ["confirmPassword"],
-});
+const formSchema = z
+  .object({
+    name: z.string().min(1, { message: "Name is required " }),
+    email: z.string().email(),
+    password: z.string().min(1, { message: "Password is required" }),
+    confirmPassword: z.string().min(1, { message: "Password is required" }),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Password is not match",
+    path: ["confirmPassword"],
+  });
 
 export const SignUpView = () => {
   const router = useRouter(); // page navigation ke liye
@@ -63,6 +65,29 @@ export const SignUpView = () => {
       }
     );
   };
+  const onSocial = (provider: "github" | "google") => {
+    setError(null); // purana error clear karo
+    setPending(true); // button ko disable karo
+
+    // Server ko signup request bhejna
+    authClient.signIn.social(
+      {
+        provider: provider,
+        callbackURL: "/",
+      },
+      {
+        // Agar signup success ho gaya
+        onSuccess: () => {
+          setPending(false);
+        },
+        // Agar signup me error aaya
+        onError: ({ error }) => {
+          setPending(false);
+          setError(error.message); // error UI me dikhana
+        },
+      }
+    );
+  };
 
   // 🔹 Form setup with React Hook Form + Zod
   const form = useForm<z.infer<typeof formSchema>>({
@@ -79,11 +104,9 @@ export const SignUpView = () => {
     // 🔹 Full page background + center form
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100 px-4">
       <div className="w-full max-w-4xl">
-
         {/* Card ke andar form aur design */}
         <Card className="overflow-hidden rounded-2xl shadow-xl border border-gray-200">
           <CardContent className="grid p-0 md:grid-cols-2">
-
             {/* 🔹 Left side: Form section */}
             <Form {...form}>
               <form
@@ -91,7 +114,6 @@ export const SignUpView = () => {
                 className="flex flex-col items-center justify-center p-7 text-gray-700"
               >
                 <div className="flex flex-col gap-6">
-                  
                   {/* Heading */}
                   <div className="flex flex-col items-center text-center">
                     <h1 className="md:text-3xl text-lg font-bold">
@@ -215,10 +237,20 @@ export const SignUpView = () => {
 
                   {/* Social login buttons */}
                   <div className="grid grid-cols-2 gap-4 w-full">
-                    <Button variant="outline" type="button" className="w-full">
+                    <Button
+                      onClick={() => onSocial("google")}
+                      variant="outline"
+                      type="button"
+                      className="w-full"
+                    >
                       Google
                     </Button>
-                    <Button variant="outline" type="button" className="w-full">
+                    <Button
+                      onClick={() => onSocial("github")}
+                      variant="outline"
+                      type="button"
+                      className="w-full"
+                    >
                       Github
                     </Button>
                   </div>
@@ -251,8 +283,8 @@ export const SignUpView = () => {
 
         {/* 🔹 Terms and conditions niche */}
         <div className="text-muted-foreground mt-5 *:[a]:hover:text-primary text-center text-xs text-balance *:[a]:underline *:[a]:underline-offset-4">
-          By clicking continue, you agree to our <a href="#">Terms of Service</a>{" "}
-          and <a href="#">Privacy Policy</a>
+          By clicking continue, you agree to our{" "}
+          <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>
         </div>
       </div>
     </div>

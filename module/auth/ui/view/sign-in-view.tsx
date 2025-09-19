@@ -57,6 +57,30 @@ export const SignInView = () => {
       }
     );
   };
+    const onSocial = (provider: "github" | "google" ) => {
+      setError(null); // purana error clear karo
+      setPending(true); // button ko disable karo
+  
+      // Server ko signup request bhejna
+      authClient.signIn.social(
+        {
+         provider:provider,
+         callbackURL:"/",
+        },
+        {
+          // Agar signup success ho gaya
+          onSuccess: () => {
+            setPending(false);
+           // redirect to home
+          },
+          // Agar signup me error aaya
+          onError: ({ error }) => {
+            setPending(false);
+            setError(error.message); // error UI me dikhana
+          },
+        }
+      );
+    };
 
   // React Hook Form setup with Zod validation
   const form = useForm<z.infer<typeof formSchema>>({
@@ -161,10 +185,18 @@ export const SignInView = () => {
 
                   {/* Social login buttons */}
                   <div className="grid grid-cols-2 gap-4 w-full">
-                    <Button variant="outline" type="button" className="w-full">
+                    <Button
+                     onClick={()=>onSocial("google")}
+                    variant="outline" 
+                    type="button" 
+                    className="w-full">
                       Google
                     </Button>
-                    <Button variant="outline" type="button" className="w-full">
+                    <Button 
+                    variant="outline" 
+                    onClick={()=> onSocial("github")}
+                    type="button" 
+                    className="w-full">
                       Github
                     </Button>
                   </div>
