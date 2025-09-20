@@ -18,7 +18,6 @@ import {
 import { Alert, AlertTitle } from "@/components/ui/alert";
 import { OctagonAlertIcon } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
 import { useState } from "react";
 
@@ -29,7 +28,6 @@ const formSchema = z.object({
 });
 
 export const SignInView = () => {
-  const router = useRouter(); // Next.js routing ke liye
   const [pending, setPending] = useState(false); // Button disable / loading state ke liye
   const [error, setError] = useState<string | null>(null); // Error message store karne ke liye
 
@@ -43,11 +41,11 @@ export const SignInView = () => {
       {
         email: data.email,
         password: data.password,
+        callbackURL:"/",
       },
       {
         onSuccess: () => {
           setPending(false);
-          router.push("/"); // Success hone par home page redirect
         },
 
         onError: ({ error }) => {

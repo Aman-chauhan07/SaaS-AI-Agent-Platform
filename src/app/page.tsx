@@ -1,13 +1,20 @@
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
+import React from 'react'
+import { HomeView } from './module/home/ui/view/home-view'
+import { auth } from '@/lib/auth'
+import { headers } from 'next/headers'
+import { redirect } from 'next/navigation'
 
-export default function Home() {
+const page = async() => {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  })
+
+  if(!session){
+    redirect("/sign-in")
+  }
   return (
-    <Link href="/sign-in">
-   
-   <Button variant="outline">
-    sign in
-   </Button>
-    </Link>
-  );
+   <HomeView/>
+  )
 }
+
+export default page

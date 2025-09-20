@@ -17,7 +17,6 @@ import {
 import { Alert, AlertTitle } from "@/components/ui/alert";
 import { OctagonAlertIcon } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
 import { useState } from "react";
 
@@ -35,7 +34,6 @@ const formSchema = z
   });
 
 export const SignUpView = () => {
-  const router = useRouter(); // page navigation ke liye
   const [pending, setPending] = useState(false); // loading state
   const [error, setError] = useState<string | null>(null); // error message dikhane ke liye
 
@@ -50,12 +48,12 @@ export const SignUpView = () => {
         name: data.name,
         email: data.email,
         password: data.password,
+        callbackURL: "/",
       },
       {
         // Agar signup success ho gaya
         onSuccess: () => {
           setPending(false);
-          router.push("/"); // redirect to home
         },
         // Agar signup me error aaya
         onError: ({ error }) => {
