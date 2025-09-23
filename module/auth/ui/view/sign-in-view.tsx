@@ -6,6 +6,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
+import {FaGithub , FaGoogle} from "react-icons/fa"
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -20,6 +21,7 @@ import { OctagonAlertIcon } from "lucide-react";
 import Link from "next/link";
 import { authClient } from "@/lib/auth-client";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 // Zod validation schema banaya gaya (email required, password required)
 const formSchema = z.object({
@@ -28,6 +30,7 @@ const formSchema = z.object({
 });
 
 export const SignInView = () => {
+  const router = useRouter()
   const [pending, setPending] = useState(false); // Button disable / loading state ke liye
   const [error, setError] = useState<string | null>(null); // Error message store karne ke liye
 
@@ -46,6 +49,7 @@ export const SignInView = () => {
       {
         onSuccess: () => {
           setPending(false);
+          router.push("/")
         },
 
         onError: ({ error }) => {
@@ -188,14 +192,14 @@ export const SignInView = () => {
                     variant="outline" 
                     type="button" 
                     className="w-full">
-                      Google
+                      <FaGoogle/>
                     </Button>
                     <Button 
                     variant="outline" 
                     onClick={()=> onSocial("github")}
                     type="button" 
                     className="w-full">
-                      Github
+                  <FaGithub/>
                     </Button>
                   </div>
 

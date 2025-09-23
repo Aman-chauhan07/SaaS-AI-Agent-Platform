@@ -4,6 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import {FaGithub, FaGoogle} from "react-icons/fa"
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
@@ -19,6 +20,7 @@ import { OctagonAlertIcon } from "lucide-react";
 import Link from "next/link";
 import { authClient } from "@/lib/auth-client";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 // 🔹 Form validation rules (Zod schema)
 const formSchema = z
@@ -34,6 +36,7 @@ const formSchema = z
   });
 
 export const SignUpView = () => {
+  const router = useRouter()
   const [pending, setPending] = useState(false); // loading state
   const [error, setError] = useState<string | null>(null); // error message dikhane ke liye
 
@@ -54,6 +57,7 @@ export const SignUpView = () => {
         // Agar signup success ho gaya
         onSuccess: () => {
           setPending(false);
+          router.push("/")
         },
         // Agar signup me error aaya
         onError: ({ error }) => {
@@ -144,7 +148,7 @@ export const SignUpView = () => {
                     />
                   </div>
 
-                  {/* Email input */}
+            
                   <div className="grid gap-3">
                     <FormField
                       control={form.control}
@@ -160,13 +164,13 @@ export const SignUpView = () => {
                               {...field}
                             />
                           </FormControl>
-                          <FormMessage /> {/* Error message */}
+                          <FormMessage /> 
                         </FormItem>
                       )}
                     />
                   </div>
 
-                  {/* Password input */}
+                
                   <div className="grid gap-3">
                     <FormField
                       control={form.control}
@@ -241,7 +245,7 @@ export const SignUpView = () => {
                       type="button"
                       className="w-full"
                     >
-                      Google
+                      <FaGoogle/>
                     </Button>
                     <Button
                       onClick={() => onSocial("github")}
@@ -249,7 +253,7 @@ export const SignUpView = () => {
                       type="button"
                       className="w-full"
                     >
-                      Github
+                      <FaGithub/>
                     </Button>
                   </div>
 
