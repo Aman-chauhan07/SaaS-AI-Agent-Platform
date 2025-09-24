@@ -16,6 +16,7 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { usePathname } from "next/navigation";
+import { DashboardUserButton } from "./dashboard-user-button";
 
 const firstSection = [
   {
@@ -38,9 +39,8 @@ const secondSection = [
 ];
 
 const DashboardSidebar = () => {
-  const pathname =usePathname()
+  const pathname = usePathname();
 
-  
   return (
     <Sidebar>
       <SidebarHeader className="text-sidebar-accent-foreground">
@@ -57,17 +57,46 @@ const DashboardSidebar = () => {
             <SidebarMenu>
               {firstSection.map((item) => (
                 <SidebarMenuItem key={item.href}>
-                  <SidebarMenuButton  
-                  asChild
-                  className={cn(
-                    "h-10 hover:bg-linear-to-r/oklch border border-transparent ",
-                    pathname === item.href && "bg-linear-to-r/oklch border-[#5D6D68]/10"
-                  )}
-                  isActive={pathname === item.href}
+                  <SidebarMenuButton
+                    asChild
+                    className={cn(
+                      "h-10 hover:bg-linear-to-r/oklch border border-transparent ",
+                      pathname === item.href &&
+                        "bg-linear-to-r/oklch border-[#5D6D68]/10"
+                    )}
+                    isActive={pathname === item.href}
                   >
-                    
                     <Link href={item.href}>
-                    <item.icon className="size-5"/>
+                      <item.icon className="size-5" />
+                      <span className="text-sm font-medium tracking-tight">
+                        {item.label}
+                      </span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+        <div className="px-4 py-2">
+          <Separator className="opacity-10 text-[#5D5B68]" />
+        </div>
+        <SidebarGroup>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {secondSection.map((item) => (
+                <SidebarMenuItem key={item.href}>
+                  <SidebarMenuButton
+                    asChild
+                    className={cn(
+                      "h-10 hover:bg-linear-to-r/oklch border border-transparent ",
+                      pathname === item.href &&
+                        "bg-linear-to-r/oklch border-[#5D6D68]/10"
+                    )}
+                    isActive={pathname === item.href}
+                  >
+                    <Link href={item.href}>
+                      <item.icon className="size-5" />
                       <span className="text-sm font-medium tracking-tight">
                         {item.label}
                       </span>
@@ -79,6 +108,9 @@ const DashboardSidebar = () => {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
+      <SidebarFooter className="text-white">
+        <DashboardUserButton/>
+      </SidebarFooter>
     </Sidebar>
   );
 };
