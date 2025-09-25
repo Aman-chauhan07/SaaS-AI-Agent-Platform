@@ -22,7 +22,7 @@ Welcome to the **SaaS AI Agent Platform** — your custom AI project! This platf
 Clone the repo:
 
 ```bash
-git clone https://github.com/your-username/saas-ai-agent-platform.git
+git clone https://github.com/Aman-chauhan07/saas-ai-agent-platform.git
 cd saas-ai-agent-platform
 ```
 
