@@ -26,12 +26,10 @@ export const GeneratedAvatar = ({
       fontSize: 42,
     });
   }
-  return(
+  return (
     <Avatar className={cn(className)}>
-        <AvatarImage src={avatar.toDataUri()} alt="Avatar"/>
-        <AvatarFallback>
-{seed.charAt(0).toUpperCase()}
-        </AvatarFallback>
+      <AvatarImage src={avatar.toDataUri()} alt="Avatar" />
+      <AvatarFallback>{seed.charAt(0).toUpperCase()}</AvatarFallback>
     </Avatar>
-  )
+  );
 };
