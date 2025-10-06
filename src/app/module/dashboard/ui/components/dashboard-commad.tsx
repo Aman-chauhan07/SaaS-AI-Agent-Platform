@@ -10,7 +10,6 @@ interface Props {
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
 }
-
 export const DashboardCommads = ({ open, setOpen }: Props) => {
   return (
     <CommandResponsiveDialog open={open} onOpenChange={setOpen}>

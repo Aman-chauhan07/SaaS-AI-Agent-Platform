@@ -1,6 +1,11 @@
 import { db } from "@/db";
 import { agents } from "@/db/schema";
-import { createTRPCRouter, baseProcedure } from "@/trpc/init";
+import {
+  createTRPCRouter,
+  baseProcedure,
+  protectedProcedure,
+} from "@/trpc/init";
+import { agentsInsertSchema } from "../schemas";
 
 export const agentsRouter = createTRPCRouter({
   getMany: baseProcedure.query(async () => {
@@ -8,4 +13,17 @@ export const agentsRouter = createTRPCRouter({
 
     return data;
   }),
+  create: protectedProcedure
+    .input(agentsInsertSchema)
+    .mutation(async ({ input, ctx }) => {
+      const [createdAgent] = await db
+        .insert(agents)
+        .values({
+          ...input,
+          userId: ctx.auth.user.id,
+        })
+        .returning();
+
+      return createdAgent; 
+    }),
 });
