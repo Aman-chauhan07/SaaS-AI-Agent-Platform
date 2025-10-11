@@ -20,7 +20,7 @@ Welcome to the **SaaS AI Agent Platform** — your custom AI project! This platf
 🌐 Next.js 15 + React 19
 🎨 Tailwind v4 + Shadcn/ui
 ⚙️ Inngest background jobs
-🧑‍💻 CodeRabbit PR reviews
+
 
 ## 🛠️ Tech Stack
 
