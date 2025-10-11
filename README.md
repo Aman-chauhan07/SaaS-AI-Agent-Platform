@@ -4,11 +4,23 @@ Welcome to the **SaaS AI Agent Platform** — your custom AI project! This platf
 
 ## 🚀 Features
 
-* Real-time AI agent interactions
-* Customizable agent personalities
-* Post-meeting summaries and transcripts
-* User authentication
-* Subscription management
+🤖 AI-powered video calls
+🧠 Custom real-time agents
+📞 Stream Video SDK
+💬 Stream Chat SDK
+📝 Summaries, transcripts, recordings
+📂 Meeting history & statuses
+🔍 Transcript search
+📺 Video playback
+💬 AI meeting Q&A
+🧠 OpenAI integration
+💳 Polar subscriptions
+🔐 Better Auth login
+📱 Mobile responsive
+🌐 Next.js 15 + React 19
+🎨 Tailwind v4 + Shadcn/ui
+⚙️ Inngest background jobs
+🧑‍💻 CodeRabbit PR reviews
 
 ## 🛠️ Tech Stack
 
