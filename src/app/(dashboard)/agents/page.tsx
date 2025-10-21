@@ -1,5 +1,5 @@
 import {
-  AgenstViewLoading,
+  AgentsViewLoading,
   AgentsView,
   AgentsViewError,
 } from "@/app/module/agents/ui/views/agents-view";
@@ -35,7 +35,7 @@ const page = async ({ searchParams }: Props) => {
     <>
       <AgentsListHeader />
       <HydrationBoundary state={dehydrate(queryClient)}>
-        <Suspense fallback={<AgenstViewLoading />}>
+        <Suspense fallback={<AgentsViewLoading />}>
           <ErrorBoundary fallback={<AgentsViewError />}>
             <AgentsView />
           </ErrorBoundary>
