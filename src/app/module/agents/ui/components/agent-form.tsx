@@ -35,20 +35,33 @@ export const AgentForm = ({
 
   const createAgent = useMutation(
     trpc.agents.create.mutationOptions({
-      onSuccess: async() => {
+      onSuccess: async () => {
         await queryClient.invalidateQueries(
-          trpc.agents.getMany.queryOptions({}),
-        )
-        if (initialValues?.id) {
-          await queryClient.invalidateQueries(
-            trpc.agents.getOne.queryOptions({id: initialValues.id}),
-          )
-          
-        }
-        onSuccess?.()
+          trpc.agents.getMany.queryOptions({})
+        );
+
+        onSuccess?.();
       },
       onError: (error) => {
-        toast.error(error.message)
+        toast.error(error.message);
+      },
+    })
+  );
+  const updateAgent = useMutation(
+    trpc.agents.update.mutationOptions({
+      onSuccess: async () => {
+        await queryClient.invalidateQueries(
+          trpc.agents.getMany.queryOptions({})
+        );
+        if (initialValues?.id) {
+          await queryClient.invalidateQueries(
+            trpc.agents.getOne.queryOptions({ id: initialValues.id })
+          );
+        }
+        onSuccess?.();
+      },
+      onError: (error) => {
+        toast.error(error.message);
       },
     })
   );
@@ -62,11 +75,11 @@ export const AgentForm = ({
   });
 
   const isEdit = !!initialValues?.id;
-  const isPending = createAgent.isPending;
+  const isPending = createAgent.isPending || updateAgent.isPending;
 
   const onSubmit = (values: z.infer<typeof agentsInsertSchema>) => {
     if (isEdit) {
-      console.log("TODO: uddateAgent");
+    updateAgent.mutate({...values, id:initialValues.id})
     } else {
       createAgent.mutate(values);
     }
@@ -102,7 +115,6 @@ export const AgentForm = ({
               <FormControl>
                 <Textarea
                   {...field}
-                 
                   placeholder="You are a helpful math assistant that can answer questions and help with assignments."
                 />
               </FormControl>
